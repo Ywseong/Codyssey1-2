@@ -41,6 +41,7 @@ class Quiz:
       print(f"{i}. {choice}")
   def is_correct(self, user_answer):
     return(user_answer == self.answer)
+  
 
 class QuizGame:
     def __init__(self):
@@ -122,6 +123,26 @@ class QuizGame:
       else:
         print(f"최고 점수: {self.best_score}점 ({self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답)")
 
+    def get_text(self, prompt):
+      while True:
+        print(prompt, end="")
+        text = input().strip()
+        if text: # 빈 문자열 text != "" -> text
+          return text
+        print("텍스트를 입력하십시오")
+
+    def add_quiz(self):
+        print("새로운 퀴즈를 추가합니다.\n")
+
+        new_question = self.get_text("문제를 입력하세요: ")
+        new_choices = []
+        for i in range(1,5):
+          new_choices.append(self.get_text(f"선택지 {i}: "))
+        new_answer = self.get_number("정답: ",1,len(new_choices))
+        new_quiz = Quiz(new_question, new_choices, new_answer)
+        self.quizzes.append(new_quiz)
+        print("퀴즈가 추가되었습니다!")
+
     def run(self):
       while True:
         self.show_menu()
@@ -129,7 +150,7 @@ class QuizGame:
         if sel == 1:
           self.play_quiz()
         elif sel == 2:
-          print("퀴즈추가 준비중")
+          self.add_quiz()
         elif sel == 3:
           print("퀴즈 목록")
           self.list_quizzes()
@@ -151,26 +172,6 @@ class QuizGame:
 
           
     
-        
-
-      
-
-          
-    
-        
-    
-
-
-      
-
-          
-    
-        
-        
-
-    
-   
-      
 
 
 q = QuizGame()
