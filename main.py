@@ -36,14 +36,13 @@ class Quiz:
     self.choices = choices
     self.answer = answer
   def display(self):
-    print(self.question, end="\n\n")
+    print(self.question)
     for i, choice in enumerate(self.choices, start=1):
       print(f"{i}. {choice}")
   def is_correct(self, user_answer):
     return(user_answer == self.answer)
 
 class QuizGame:
-
     def __init__(self):
       self.quizzes = []
       for data in DEFAULT_QUIZZES:
@@ -52,12 +51,16 @@ class QuizGame:
       
       self.best_score = 0
 
-    def list_quizzes(self):
-      quiz_count = len(self.quizzes) # 퀴즈의 개수
-      if quiz_count == 0: # 퀴즈가 0개 일때
+    def count_quiz(self):
+      quiz_cnt = len(self.quizzes) # 퀴즈의 개수
+      if quiz_cnt == 0: # 퀴즈가 0개 일때
         print("저장된 퀴즈가 없습니다.\n퀴즈를 추가하십시오")
+      return quiz_cnt
+
+    def list_quizzes(self):
+      quiz_count = self.count_quiz()
+      if quiz_count <= 0:
         return
-      
       print(f'총 퀴즈 개수: {quiz_count}개',end='\n\n')
       for i, quiz in enumerate(self.quizzes, start=1):
         print(f'[{i}] {quiz.question}', end='')
@@ -83,13 +86,27 @@ class QuizGame:
           pass
         print(f'{min_value}~{max_value} 이내의 숫자를 입력하세요')
       
-    
+    def play_quiz(self):
+      quiz_cnt = self.count_quiz()
+      if  quiz_cnt == 0:
+        return
+      print(f"퀴즈를 시작합니다! (총 {quiz_cnt}문제)\n")
+      for i, quiz in enumerate(self.quizzes, start=1):
+        print(f'[{i}] ', end="")
+        quiz.display()
+        user_answer = self.get_number("답: ", 1, len(quiz.choices))
+        if quiz.is_correct(user_answer):
+          print("정답입니다!")
+        else:
+          print("오답입니다!")
+        print()
+      
     def run(self):
       while True:
         self.show_menu()
         sel = self.get_number("선택: ", 1, len(menu))
         if sel == 1:
-          print("퀴즈풀기 준비중")
+          self.play_quiz()
         elif sel == 2:
           print("퀴즈추가 준비중")
         elif sel == 3:
@@ -100,7 +117,14 @@ class QuizGame:
         elif sel == 5:
           print("프로그램을 종료합니다.")
           break
-        print()
+
+
+      
+
+          
+    
+        
+    
 
 
       
