@@ -43,6 +43,7 @@ class Quiz:
     return(user_answer == self.answer)
 
 class QuizGame:
+
     def __init__(self):
       self.quizzes = []
       for data in DEFAULT_QUIZZES:
@@ -61,24 +62,58 @@ class QuizGame:
       for i, quiz in enumerate(self.quizzes, start=1):
         print(f'[{i}] {quiz.question}', end='')
         print()
+    
+    def show_menu(self):
+      print("========================================")
+      print("         🎯 나만의 퀴즈 게임 🎯")
+      print("========================================")
+      for i in menu:
+          print(f"{i}. {menu[i]}")
+      print("========================================")
+    
+    def get_number(self, prompt,min_value, max_value):
+      while(True):
+        print(prompt, end="")
+        try: 
+          sel = int(input().strip())
+
+          if min_value <= sel <= max_value:
+            return sel
+        except ValueError:
+          pass
+        print(f'{min_value}~{max_value} 이내의 숫자를 입력하세요')
+      
+    
+    def run(self):
+      while True:
+        self.show_menu()
+        sel = self.get_number("선택: ", 1, len(menu))
+        if sel == 1:
+          print("퀴즈풀기 준비중")
+        elif sel == 2:
+          print("퀴즈추가 준비중")
+        elif sel == 3:
+          print("퀴즈 목록")
+          self.list_quizzes()
+        elif sel == 4:
+          print("점수 확인")
+        elif sel == 5:
+          print("프로그램을 종료합니다.")
+          break
+        print()
+
+
+      
+
+          
+    
+        
         
 
     
    
       
 
-print("========================================")
-print("         🎯 나만의 퀴즈 게임 🎯")
-print("========================================")
-for i in menu:
-    print(f"{i}. {menu[i]}")
-print("========================================")
-print("선택: ", end="")
-sel = input()
-print()
-
 
 q = QuizGame()
-q.list_quizzes()
-q.quizzes = []
-q.list_quizzes()
+q.run()
