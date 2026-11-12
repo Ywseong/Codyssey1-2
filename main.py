@@ -88,6 +88,8 @@ class QuizGame:
       
     def play_quiz(self):
       quiz_cnt = self.count_quiz()
+      cor_ans = 0
+      score = 0
       if  quiz_cnt == 0:
         return
       print(f"퀴즈를 시작합니다! (총 {quiz_cnt}문제)\n")
@@ -97,9 +99,15 @@ class QuizGame:
         user_answer = self.get_number("답: ", 1, len(quiz.choices))
         if quiz.is_correct(user_answer):
           print("정답입니다!")
+          cor_ans += 1
         else:
           print("오답입니다!")
         print()
+      score = round((cor_ans/quiz_cnt)*100)
+      print(f"{quiz_cnt}문제 중 {cor_ans}문제 정답!({score}점)")
+      if score > self.best_score:
+        print(f"최고 점수를 갱신하였습니다! {self.best_score}점 -> {score}점")
+        self.best_score = score
       
     def run(self):
       while True:
@@ -118,6 +126,12 @@ class QuizGame:
           print("프로그램을 종료합니다.")
           break
 
+
+      
+
+          
+    
+        
 
       
 
