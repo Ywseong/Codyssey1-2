@@ -36,12 +36,35 @@ class Quiz:
     self.choices = choices
     self.answer = answer
   def display(self):
-    print(self.question)
+    print(self.question, end="\n\n")
     for i, choice in enumerate(self.choices, start=1):
       print(f"{i}. {choice}")
   def is_correct(self, user_answer):
     return(user_answer == self.answer)
 
+class QuizGame:
+    def __init__(self):
+      self.quizzes = []
+      for data in DEFAULT_QUIZZES:
+        q = Quiz(data["question"], data["choices"], data["answer"])
+        self.quizzes.append(q)
+      
+      self.best_score = 0
+
+    def list_quizzes(self):
+      quiz_count = len(self.quizzes) # 퀴즈의 개수
+      if quiz_count == 0: # 퀴즈가 0개 일때
+        print("저장된 퀴즈가 없습니다.\n퀴즈를 추가하십시오")
+        return
+      
+      print(f'총 퀴즈 개수: {quiz_count}개',end='\n\n')
+      for i, quiz in enumerate(self.quizzes, start=1):
+        print(f'[{i}] {quiz.question}', end='')
+        print()
+        
+
+    
+   
       
 
 print("========================================")
@@ -55,15 +78,7 @@ sel = input()
 print()
 
 
-if sel == "1": # 퀴즈 풀기
-    data = DEFAULT_QUIZZES[0]
-    q = Quiz(data["question"], data["choices"], data["answer"])
-    q.display()
-    user_answer = int(input("정답: "))
-    if q.is_correct(user_answer):
-        print("정답입니다.")
-    else:
-        print("오답입니다.")
-
-else:
-    print("선택한 메뉴가 없습니다.")
+q = QuizGame()
+q.list_quizzes()
+q.quizzes = []
+q.list_quizzes()
