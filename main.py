@@ -35,21 +35,34 @@ class Quiz:
     self.question = question
     self.choices = choices
     self.answer = answer
+
   def display(self):
     print(self.question)
     for i, choice in enumerate(self.choices, start=1):
       print(f"{i}. {choice}")
+
   def is_correct(self, user_answer):
     return(user_answer == self.answer)
+
+  def to_dict(self):
+    return {
+        "question" : self.question,
+        "choices" : self.choices,
+        "answer" : self.answer
+    }
+  @classmethod
+  def from_dict(cls, data):
+     return cls(data["question"],data["choices"],data["answer"])
+
   
 
 class QuizGame:
     def __init__(self):
       self.quizzes = []
       for data in DEFAULT_QUIZZES:
-        q = Quiz(data["question"], data["choices"], data["answer"])
+        q = Quiz.from_dict(data)
         self.quizzes.append(q)
-      
+
       self.best_score = None
       self.best_quiz_cnt = 0
       self.best_cor_ans = 0
@@ -68,7 +81,7 @@ class QuizGame:
       for i, quiz in enumerate(self.quizzes, start=1):
         print(f'[{i}] {quiz.question}', end='')
         print()
-    
+
     def show_menu(self):
       print("========================================")
       print("         🎯 나만의 퀴즈 게임 🎯")
@@ -76,11 +89,11 @@ class QuizGame:
       for i in menu:
           print(f"{i}. {menu[i]}")
       print("========================================")
-    
+
     def get_number(self, prompt,min_value, max_value):
       while(True):
         print(prompt, end="")
-        try: 
+        try:
           sel = int(input().strip())
 
           if min_value <= sel <= max_value:
@@ -88,7 +101,7 @@ class QuizGame:
         except ValueError:
           pass
         print(f'{min_value}~{max_value} 이내의 숫자를 입력하세요')
-      
+
     def play_quiz(self):
       quiz_cnt = self.count_quiz()
       cor_ans = 0
@@ -116,7 +129,7 @@ class QuizGame:
         self.best_score = score
         self.best_quiz_cnt = quiz_cnt
         self.best_cor_ans = cor_ans
-    
+
     def show_score(self):
       if self.best_score is None:
         print("아직 퀴즈를 풀지 않았습니다.")
@@ -162,16 +175,6 @@ class QuizGame:
           break
 
 
-      
-
-          
-    
-        
-
-      
-
-          
-    
 
 
 q = QuizGame()
