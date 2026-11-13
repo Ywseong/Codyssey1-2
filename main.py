@@ -1,5 +1,5 @@
 import json
-
+STATE_FILE = "state.json"
 menu = {1: "퀴즈 풀기", 2: "퀴즈 추가", 3: "퀴즈 목록", 4: "점수 확인", 5: "종료"}
 
 DEFAULT_QUIZZES = [
@@ -66,6 +66,26 @@ class QuizGame:
       self.best_score = None
       self.best_quiz_cnt = 0
       self.best_cor_ans = 0
+
+    def save_state(self):
+      quiz_list = []
+      for quiz in self.quizzes:
+        quiz_list.append(quiz.to_dict())
+      state = {
+          "quizzes": quiz_list,
+          "best_score": {
+              "score": self.best_score,
+              "total": self.best_quiz_cnt,
+              "correct": self.best_cor_ans
+          }
+      }
+      try:
+        with open(STATE_FILE, "w", encoding="utf-8") as f: 
+          json.dump(state, f, ensure_ascii=False, indent = 4)
+          return True
+      except OSError:
+        print("파일 저장에 실패하였습니다.")
+        return False
 
     def count_quiz(self):
       quiz_cnt = len(self.quizzes) # 퀴즈의 개수
@@ -172,6 +192,8 @@ class QuizGame:
           self.show_score()
         elif sel == 5:
           print("프로그램을 종료합니다.")
+          if self.save_state(): 
+            print("현재 상태가 state.json에 저장되었습니다.")
           break
 
 
