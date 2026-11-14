@@ -66,6 +66,30 @@ class QuizGame:
       self.best_score = None
       self.best_quiz_cnt = 0
       self.best_cor_ans = 0
+      self.changed = False # 변경사항 감지(퀴즈추가, 최고점수 갱신 등)
+      self.load_json()
+
+    def load_json(self):
+          try:
+            with open(STATE_FILE,"r",encoding="utf-8") as f:
+              state = json.load(f)
+              self.quizzes = []
+              for quiz in state["quizzes"]:
+                self.quizzes.append(Quiz.from_dict(quiz))
+
+              print("기존 데이터를 불러오는데 성공하였습니다.")
+              print(f"총 {len(state['quizzes'])}문제")
+
+              if state["best_score"]["score"] is None:
+                print("최고점수: 기록없음")
+              else:
+                self.best_score = state["best_score"]["score"]
+                self.best_quiz_cnt = state["best_score"]["total"]
+                self.best_cor_ans = state["best_score"]["correct"]
+                print(f"최고점수: {self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답({self.best_score}점)")
+              
+          except FileNotFoundError:
+            print("저장된 데이터가 없어 기본 퀴즈로 시작합니다.",end="\n\n")
 
     def save_state(self):
       quiz_list = []
@@ -149,6 +173,7 @@ class QuizGame:
         self.best_score = score
         self.best_quiz_cnt = quiz_cnt
         self.best_cor_ans = cor_ans
+        self.changed = True # 최고점수 갱신으로 변경사항 감지
 
     def show_score(self):
       if self.best_score is None:
@@ -175,6 +200,7 @@ class QuizGame:
         new_quiz = Quiz(new_question, new_choices, new_answer)
         self.quizzes.append(new_quiz)
         print("퀴즈가 추가되었습니다!")
+        self.changed = True # 퀴즈 추가로 변경사항 감지
 
     def run(self):
       while True:
@@ -192,7 +218,7 @@ class QuizGame:
           self.show_score()
         elif sel == 5:
           print("프로그램을 종료합니다.")
-          if self.save_state(): 
+          if self.changed and self.save_state():
             print("현재 상태가 state.json에 저장되었습니다.")
           break
 
