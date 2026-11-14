@@ -1,0 +1,59 @@
+{
+    "quizzes": [
+        {
+            "question": "애플리케이션을 컨테이너로 만들어 실행하는 도구는?",
+            "choices": [
+                "Docker",
+                "Container",
+                "Python",
+                "Ubuntu"
+            ],
+            "answer": 1
+        },
+        {
+            "question": "CLI 기반 버전 관리 도구는?",
+            "choices": [
+                "Docker",
+                "GitHub",
+                "Git",
+                "Visual Studio Code"
+            ],
+            "answer": 3
+        },
+        {
+            "question": "다음 중 코드 에디터는?",
+            "choices": [
+                "Apache",
+                "HTML",
+                "NGINX",
+                "Visual Studio Code"
+            ],
+            "answer": 4
+        },
+        {
+            "question": "다음 중 셸(명령줄 인터페이스)이 아닌 것은?",
+            "choices": [
+                "Git Bash",
+                "Bash",
+                "Apache",
+                "PowerShell"
+            ],
+            "answer": 3
+        },
+        {
+            "question": "리눅스에서 디렉터리를 이동하는 명령어는?",
+            "choices": [
+                "ping",
+                "cd",
+                "mkdir",
+                "rm"
+            ],
+            "answer": 2
+        }
+    ],
+    "best_score": {
+        "score": null,
+        "total": 0,
+        "correct": 0
+    }
+}

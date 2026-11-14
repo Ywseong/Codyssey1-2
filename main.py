@@ -88,8 +88,12 @@ class QuizGame:
                 self.best_cor_ans = state["best_score"]["correct"]
                 print(f"최고점수: {self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답({self.best_score}점)")
               
-          except FileNotFoundError:
+          except FileNotFoundError: # 파일없음 처리
             print("저장된 데이터가 없어 기본 퀴즈로 시작합니다.",end="\n\n")
+          except json.JSONDecodeError: # JSON 형식 오류 처리
+            print(f"{STATE_FILE} 파일이 손상되었습니다. 기본 퀴즈로 시작합니다.",end="\n\n")
+          except KeyError: # JSON 키 오류 처리
+            print(f"{STATE_FILE}의 데이터 형식이 올바르지 않습니다. 기본 퀴즈로 시작합니다.",end="\n\n")
 
     def save_state(self):
       quiz_list = []
@@ -218,7 +222,9 @@ class QuizGame:
           self.show_score()
         elif sel == 5:
           print("프로그램을 종료합니다.")
-          if self.changed and self.save_state():
+          if not self.changed:
+            print("변경사항이 없습니다.")
+          elif self.save_state():
             print("현재 상태가 state.json에 저장되었습니다.")
           break
 
