@@ -216,27 +216,38 @@ class QuizGame:
         print("퀴즈가 추가되었습니다!")
         self.changed = True # 퀴즈 추가로 변경사항 감지
 
+    def exit_quiz(self):
+      print("프로그램을 종료합니다.")
+      if not self.changed:
+        print("변경사항이 없습니다.")
+      elif self.save_state():
+        print("현재 상태가 state.json에 저장되었습니다.")
+
     def run(self):
       while True:
         self.show_menu()
-        sel = self.get_number("선택: ", 1, len(menu))
-        if sel == 1:
-          self.play_quiz()
-        elif sel == 2:
-          self.add_quiz()
-        elif sel == 3:
-          print("퀴즈 목록")
-          self.list_quizzes()
-        elif sel == 4:
-          print("점수 확인")
-          self.show_score()
-        elif sel == 5:
-          print("프로그램을 종료합니다.")
-          if not self.changed:
-            print("변경사항이 없습니다.")
-          elif self.save_state():
-            print("현재 상태가 state.json에 저장되었습니다.")
+       
+        try:
+          sel = self.get_number("선택: ", 1, len(menu))
+    
+          if sel == 1:
+            self.play_quiz()
+          elif sel == 2:
+            self.add_quiz()
+          elif sel == 3:
+            print("퀴즈 목록")
+            self.list_quizzes()
+          elif sel == 4:
+            print("점수 확인")
+            self.show_score()
+          elif sel == 5:
+            self.exit_quiz()
+            break
+        except (KeyboardInterrupt, EOFError):
+          print("\n중단 신호를 받았습니다.")
+          self.exit_quiz()
           break
+          
 
 
 
