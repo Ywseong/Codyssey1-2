@@ -73,24 +73,34 @@ class QuizGame:
           try:
             with open(STATE_FILE,"r",encoding="utf-8") as f:
               state = json.load(f)
-              self.quizzes = []
+              loaded = []
               for quiz in state["quizzes"]:
-                self.quizzes.append(Quiz.from_dict(quiz))
+                loaded.append(Quiz.from_dict(quiz))
 
-              print("기존 데이터를 불러오는데 성공하였습니다.")
-              print(f"총 {len(state['quizzes'])}문제")
+              self.quizzes = loaded
+              print("기존 퀴즈를 불러오는데 성공하였습니다.")
+              print(f"총 {len(self.quizzes)}문제")
 
-              if state["best_score"]["score"] is None:
-                print("최고점수: 기록없음")
-              else:
-                self.best_score = state["best_score"]["score"]
-                self.best_quiz_cnt = state["best_score"]["total"]
-                self.best_cor_ans = state["best_score"]["correct"]
-                print(f"최고점수: {self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답({self.best_score}점)")
-              
+              try:
+                load_score = state["best_score"]["score"]
+                load_quiz_cnt = state["best_score"]["total"]
+                load_cor_ans = state["best_score"]["correct"]
+
+                self.best_score = load_score
+                self.best_quiz_cnt = load_quiz_cnt
+                self.best_cor_ans = load_cor_ans
+
+                if self.best_score is None:
+                  print("최고점수: 기록없음")
+                else:
+                  print(f"최고점수: {self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답({self.best_score}점)")
+              except (KeyError, TypeError):
+                print("최고 점수 기록을 읽을 수 없어 초기화 합니다.")
+                
+
           except FileNotFoundError: # 파일없음 처리
             print("저장된 데이터가 없어 기본 퀴즈로 시작합니다.",end="\n\n")
-          except json.JSONDecodeError: # JSON 형식 오류 처리
+          except (json.JSONDecodeError,TypeError): # JSON 형식 오류 처리
             print(f"{STATE_FILE} 파일이 손상되었습니다. 기본 퀴즈로 시작합니다.",end="\n\n")
           except KeyError: # JSON 키 오류 처리
             print(f"{STATE_FILE}의 데이터 형식이 올바르지 않습니다. 기본 퀴즈로 시작합니다.",end="\n\n")
