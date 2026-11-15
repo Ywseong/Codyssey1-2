@@ -58,6 +58,7 @@ class Quiz:
 
 
 class QuizGame:
+    # 1. 생성
     def __init__(self):
         self.quizzes = []
         for data in DEFAULT_QUIZZES:
@@ -70,6 +71,7 @@ class QuizGame:
         self.changed = False  # 변경사항 감지(퀴즈추가, 최고점수 갱신 등)
         self.load_json()
 
+	# 2. 저장 / 불러오기
     def load_json(self):
         try:
             with open(STATE_FILE, "r", encoding="utf-8") as f:
@@ -133,28 +135,7 @@ class QuizGame:
             print("파일 저장에 실패하였습니다.")
             return False
 
-    def count_quiz(self):
-        quiz_cnt = len(self.quizzes)  # 퀴즈의 개수
-        if quiz_cnt == 0:  # 퀴즈가 0개 일때
-            print("저장된 퀴즈가 없습니다.\n퀴즈를 추가하십시오")
-        return quiz_cnt
-
-    def list_quizzes(self):
-        quiz_count = self.count_quiz()
-        if quiz_count <= 0:
-            return
-        print(f"총 퀴즈 개수: {quiz_count}개", end="\n\n")
-        for i, quiz in enumerate(self.quizzes, start=1):
-            print(f"[{i}] {quiz.question}")
-
-    def show_menu(self):
-        print("========================================")
-        print("         🎯 나만의 퀴즈 게임 🎯")
-        print("========================================")
-        for num, name in MENU.items():
-            print(f"{num}. {name}")
-        print("========================================")
-
+	# 3. 입력 검증
     def get_number(self, prompt, min_value, max_value):
         while True:
             try:
@@ -166,6 +147,29 @@ class QuizGame:
                 pass
             print(f"{min_value}~{max_value} 이내의 숫자를 입력하세요")
 
+    def get_text(self, prompt):
+        while True:
+            text = input(prompt).strip()
+            if text:
+                return text
+            print("텍스트를 입력하십시오")	
+
+	# 4. 화면 / 보조
+    def show_menu(self):
+        print("========================================")
+        print("         🎯 나만의 퀴즈 게임 🎯")
+        print("========================================")
+        for num, name in MENU.items():
+            print(f"{num}. {name}")
+        print("========================================")    
+
+    def count_quiz(self):
+        quiz_cnt = len(self.quizzes)  # 퀴즈의 개수
+        if quiz_cnt == 0:  # 퀴즈가 0개 일때
+            print("저장된 퀴즈가 없습니다.\n퀴즈를 추가하십시오")
+        return quiz_cnt
+
+	# 5. 메뉴 기능 (메뉴 번호 순서)
     def play_quiz(self):
         quiz_cnt = self.count_quiz()
         cor_ans = 0
@@ -194,21 +198,6 @@ class QuizGame:
             self.best_cor_ans = cor_ans
             self.changed = True  # 최고점수 갱신으로 변경사항 감지
 
-    def show_score(self):
-        if self.best_score is None:
-            print("아직 퀴즈를 풀지 않았습니다.")
-        else:
-            print(
-                f"최고 점수: {self.best_score}점 ({self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답)"
-            )
-
-    def get_text(self, prompt):
-        while True:
-            text = input(prompt).strip()
-            if text:
-                return text
-            print("텍스트를 입력하십시오")
-
     def add_quiz(self):
         print("새로운 퀴즈를 추가합니다.\n")
 
@@ -221,6 +210,22 @@ class QuizGame:
         self.quizzes.append(new_quiz)
         print("퀴즈가 추가되었습니다!")
         self.changed = True  # 퀴즈 추가로 변경사항 감지
+                        
+    def list_quizzes(self):
+        quiz_count = self.count_quiz()
+        if quiz_count <= 0:
+            return
+        print(f"총 퀴즈 개수: {quiz_count}개", end="\n\n")
+        for i, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{i}] {quiz.question}")
+
+    def show_score(self):
+        if self.best_score is None:
+            print("아직 퀴즈를 풀지 않았습니다.")
+        else:
+            print(
+                f"최고 점수: {self.best_score}점 ({self.best_quiz_cnt}문제 중 {self.best_cor_ans}문제 정답)"
+            )
 
     def exit_quiz(self):
         print("프로그램을 종료합니다.")
@@ -229,6 +234,7 @@ class QuizGame:
         elif self.save_state():
             print(f"현재 상태가 {STATE_FILE}에 저장되었습니다.")
 
+	# 6. 실행
     def run(self):
         while True:
             try:
