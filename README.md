@@ -177,7 +177,7 @@ git push
 ![git log --oneline --graph](./docs/screenshots/git-log.png)
  
 ### clone / pull 실습
-(작성 예정)
+작업 폴더와 다른 위치(D:\Codyssey1-2-clone)에 저장소를 clone하고, 이 문단을 추가해 commit과 push를 했다. 그다음 원래 작업 폴더(D:\Codyssey1-2)에서 git pull로 변경을 받아와 반영된 것을 확인했다.
  
 ### 기초 명령어 사용 현황
 | 명령어 | 사용 |
@@ -188,7 +188,7 @@ git push
 | push | O |
 | checkout | O |
 | clone | O |
-| pull | (실습 후 O) |
+| pull | O |
  
 ## 9. 트러블슈팅
  
