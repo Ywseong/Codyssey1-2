@@ -1,5 +1,5 @@
 import json
-
+import random as rd
 STATE_FILE = "state.json"
 MENU = {1: "퀴즈 풀기", 2: "퀴즈 추가", 3: "퀴즈 목록", 4: "점수 확인", 5: "종료"}
 DEFAULT_QUIZZES = [
@@ -101,6 +101,7 @@ class QuizGame:
                         )
                 except (KeyError, TypeError):
                     print("최고 점수 기록을 읽을 수 없어 초기화 합니다.")
+                    self.changed = True # 피드백: 초기화 하면 저장 
 
         except FileNotFoundError:  # 파일없음 처리
             print("저장된 데이터가 없어 기본 퀴즈로 시작합니다.", end="\n\n")
@@ -175,7 +176,33 @@ class QuizGame:
         cor_ans = 0
         if quiz_cnt == 0:
             return
+        while True:
+            try:
+                num = int(input("총 몇 문제를 풀건지 입력하세요(Enter, 0은 모든 문제): "))
+                if num == "" or num == 0:
+                    break
+                elif num > quiz_cnt:
+                    print("현재 문제 수 보다 많습니다.")
+                else:
+                    quiz_cnt = num
+                    break
+            except (TypeError,ValueError):
+                print("숫자를 입력하시오")
+        rd_nums = rd.sample(range(0, self.count_quiz()),quiz_cnt)  # 랜덤 수 샘플링
+
         print(f"퀴즈를 시작합니다! (총 {quiz_cnt}문제)\n")
+        for i, num in enumerate(rd_nums,start=1):
+            print(f"[{i}] ", end="")
+            quiz = self.quizzes[num]
+            quiz.display()
+            user_answer = self.get_number("답: ", 1, len(quiz.choices))
+            if quiz.is_correct(user_answer):
+                print("정답입니다!")
+                cor_ans += 1
+            else:   
+                print("오답입니다!")
+            print()    
+        '''
         for i, quiz in enumerate(self.quizzes, start=1):
             print(f"[{i}] ", end="")
             quiz.display()
@@ -186,6 +213,7 @@ class QuizGame:
             else:
                 print("오답입니다!")
             print()
+        '''
         score = round((cor_ans / quiz_cnt) * 100)
         print(f"{quiz_cnt}문제 중 {cor_ans}문제 정답!({score}점)")
         if self.best_score is None or score > self.best_score:
@@ -203,8 +231,22 @@ class QuizGame:
 
         new_question = self.get_text("문제를 입력하세요: ")
         new_choices = []
+
+        # 피드백: 퀴즈 중복 검증
+        i=1
+        while(i<5):
+            choice = self.get_text(f"선택지 {i}: ")
+            if choice in new_choices:
+                print("이미 있는 선택지입니다.")
+                continue
+            else:
+                new_choices.append(choice)
+                i += 1
+        '''
         for i in range(1, 5):
+                # 퀴즈 선택지 검증
             new_choices.append(self.get_text(f"선택지 {i}: "))
+        '''
         new_answer = self.get_number("정답: ", 1, len(new_choices))
         new_quiz = Quiz(new_question, new_choices, new_answer)
         self.quizzes.append(new_quiz)
